@@ -1,0 +1,40 @@
+# ============================================================
+# GPU Portfolio – Conda Environment
+# Author: Samira Babalou
+# Repository: gpu-portfolio
+#
+# This environment is used for GPU computing demos,
+# performance analysis, and Jupyter notebooks.
+# ============================================================
+
+name: gpu-portfolio
+
+channels:
+  - conda-forge
+  - nvidia
+
+dependencies:
+  # Core Python
+  - python=3.10
+
+  # Jupyter ecosystem
+  - jupyterlab
+  - notebook
+  - ipykernel
+
+  # Numerical computing
+  - numpy
+  - scipy
+  - pandas
+  - matplotlib
+
+  # GPU support (CUDA-aware libraries)
+  - numba
+  - cudatoolkit
+
+  # Utilities
+  - pip
+
+  # Pip-only packages (installed via pip)
+  - pip:
+      - cupy-cuda11x

@@ -1,0 +1,45 @@
+# ----------------------------------------------------------------------
+# File: gpu-ci.yml
+# Author: Samira Babalou
+# Date: 2026-01-15
+# Purpose: CI workflow for GPU portfolio repo
+# Features:
+#   - Build conda environment
+#   - Run Jupyter notebooks to verify GPU code
+#   - Optional: run scripts for runtime metrics
+# ----------------------------------------------------------------------
+name: GPU Portfolio CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      # Step 1: Checkout repo
+      - uses: actions/checkout@v3
+
+      # Step 2: Install conda
+      - name: Setup Miniconda
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          auto-update-conda: true
+          python-version: 3.11
+          environment-file: environment.yml
+          activate-environment: gpu-portfolio
+
+      # Step 3: Run Jupyter notebooks (example)
+      - name: Run notebooks
+        run: |
+          jupyter nbconvert --to notebook --execute notebooks/vector_addition.ipynb
+          jupyter nbconvert --to notebook --execute notebooks/stencil_gpu.ipynb
+
+      # Step 4: Run GPU benchmark scripts
+      - name: Run performance scripts
+        run: |
+          bash scripts/run_stencil.sh
+          python3 performance/plot_metrics.py
