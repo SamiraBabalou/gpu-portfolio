@@ -1,25 +1,61 @@
-# Use NVIDIA CUDA base image
+# ----------------------------------------------------------------------
+# File: Dockerfile
+# Purpose:
+#   GPU-enabled container for running CUDA/CuPy notebooks
+#   and performance benchmarks in a reproducible environment.
+# ----------------------------------------------------------------------
+
+# Base NVIDIA CUDA image (runtime only, no driver)
 FROM nvidia/cuda:12.2.0-base-ubuntu22.04
 
-# Author & purpose
-LABEL author="Samira Babalou"
-LABEL purpose="GPU portfolio for CUDA experiments"
+# Metadata
+LABEL project="gpu-portfolio"
+LABEL purpose="GPU computing portfolio with notebooks and benchmarks"
 
-# Install dependencies
+# ------------------------------------------------------------
+# System dependencies
+# ------------------------------------------------------------
 RUN apt-get update && \
-    apt-get install -y python3 python3-pip git build-essential && \
-    pip3 install --upgrade pip matplotlib numpy jupyter
+    apt-get install -y \
+        python3 \
+        python3-pip \
+        git \
+        build-essential && \
+    rm -rf /var/lib/apt/lists/*
 
-# Create a non-root user
-RUN useradd -ms /bin/bash samira
-USER samira
+# ------------------------------------------------------------
+# Python dependencies
+# ------------------------------------------------------------
+RUN pip3 install --upgrade pip && \
+    pip3 install \
+        numpy \
+        matplotlib \
+        jupyter \
+        ipykernel \
+        cupy-cuda12x
+
+# ------------------------------------------------------------
+# Register Jupyter kernel (generic for any user)
+# ------------------------------------------------------------
+RUN python3 -m ipykernel install \
+    --user \
+    --name gpu-portfolio \
+    --display-name "Python (gpu-portfolio)"
+
+# ------------------------------------------------------------
+# Use generic non-root user created automatically by container
+# ------------------------------------------------------------
+RUN useradd -ms /bin/bash gpuuser
+USER gpuuser
 WORKDIR /workspace
 
-# Copy repo contents
-COPY . /workspace
+# Copy repository contents
+COPY --chown=gpuuser:gpuuser . /workspace
 
 # Expose Jupyter port
 EXPOSE 8888
 
-# Start Jupyter Notebook
-CMD ["jupyter", "notebook", "--ip=0.0.0.0", "--allow-root", "--no-browser"]
+# ------------------------------------------------------------
+# Default command: start Jupyter Notebook
+# ------------------------------------------------------------
+CMD ["jupyter", "notebook", "--ip=0.0.0.0", "--no-browser"]

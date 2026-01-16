@@ -2,12 +2,16 @@
 # File: gpu-ci.yml
 # Author: Samira Babalou
 # Date: 2026-01-15
-# Purpose: CI workflow for GPU portfolio repo
+# Purpose: CI workflow for GPU portfolio repository
+#
 # Features:
-#   - Build conda environment
-#   - Run Jupyter notebooks to verify GPU code
-#   - Optional: run scripts for runtime metrics
+#   - Creates conda environment from environment.yml
+#   - Executes Jupyter notebooks (CPU-safe)
+#   - Runs GPU/CPU benchmark scripts
+#   - Generates performance plots
+#   - Uploads results as CI artifacts
 # ----------------------------------------------------------------------
+
 name: GPU Portfolio CI
 
 on:
@@ -19,11 +23,13 @@ on:
 jobs:
   build-test:
     runs-on: ubuntu-latest
-    steps:
-      # Step 1: Checkout repo
-      - uses: actions/checkout@v3
 
-      # Step 2: Install conda
+    steps:
+      # Step 1: Checkout repository
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      # Step 2: Install Miniconda and create environment
       - name: Setup Miniconda
         uses: conda-incubator/setup-miniconda@v2
         with:
@@ -32,14 +38,40 @@ jobs:
           environment-file: environment.yml
           activate-environment: gpu-portfolio
 
-      # Step 3: Run Jupyter notebooks (example)
+      # Step 3: Verify environment
+      - name: Show environment info
+        run: |
+          conda info
+          conda list
+ 
+      # Step 4: Register conda env as Jupyter kernel
+      - name: Register Jupyter kernel
+        run: |
+          python -m ipykernel install \
+            --user \
+            --name gpu-portfolio \
+            --display-name "Python (gpu-portfolio)"
+
+
+      # Step 5: Execute Jupyter notebooks
       - name: Run notebooks
         run: |
-          jupyter nbconvert --to notebook --execute notebooks/vector_addition.ipynb
-          jupyter nbconvert --to notebook --execute notebooks/stencil_gpu.ipynb
+          bash scripts/run_notebooks.sh
 
-      # Step 4: Run GPU benchmark scripts
-      - name: Run performance scripts
+
+      # Step 6: Run performance benchmark
+      - name: Run benchmark script
         run: |
-          bash scripts/run_stencil.sh
-          python3 performance/plot_metrics.py
+          python performance/benchmark_vector_add.py
+
+      # Step 7: Generate performance plots
+      - name: Generate plots
+        run: |
+          python performance/plot_performance.py
+
+      # Step 8: Upload artifacts
+      - name: Upload performance results
+        uses: actions/upload-artifact@v3
+        with:
+          name: gpu-performance-results
+          path: performance/
