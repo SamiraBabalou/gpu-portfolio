@@ -1,8 +1,14 @@
 # ----------------------------------------------------------------------
 # File: Dockerfile
-# Purpose:
-#   GPU-enabled container for running CUDA/CuPy notebooks
-#   and performance benchmarks in a reproducible environment.
+# Author: Samira Babalou
+# Date: 2026-01-16
+# Purpose: GPU-enabled container for running CUDA/CuPy notebooks
+#          and performance benchmarks in a reproducible environment.
+# Notes:
+#   - Uses NVIDIA CUDA base image
+#   - Installs Python, pip, Jupyter, and GPU libraries
+#   - Registers a Jupyter kernel named 'gpu-portfolio'
+#   - Works with Docker, local runs, and CI pipelines
 # ----------------------------------------------------------------------
 
 # Base NVIDIA CUDA image (runtime only, no driver)
@@ -43,7 +49,7 @@ RUN python3 -m ipykernel install \
     --display-name "Python (gpu-portfolio)"
 
 # ------------------------------------------------------------
-# Use generic non-root user created automatically by container
+# Generic non-root user
 # ------------------------------------------------------------
 RUN useradd -ms /bin/bash gpuuser
 USER gpuuser
