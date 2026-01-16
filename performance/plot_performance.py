@@ -11,7 +11,8 @@ import os
 
 base_dir = os.path.dirname(__file__)
 results_file = os.path.join(base_dir, "performance_results.txt")
-figures_dir = os.path.join(base_dir, "figures")
+figures_dir = os.path.join(base_dir, "..", "reports", "figures")
+
 
 os.makedirs(figures_dir, exist_ok=True)
 

@@ -64,12 +64,18 @@ jobs:
         run: |
           python performance/benchmark_vector_add.py
 
-      # Step 7: Generate performance plots
+      # Step 7: Collect GPU metadata
+      - name: Collect GPU metadata
+        run: |
+          python performance/gpu_info.py
+
+      
+      # Step 8: Generate performance plots
       - name: Generate plots
         run: |
           python performance/plot_performance.py
 
-      # Step 8: Upload artifacts
+      # Step 9: Upload artifacts
       - name: Upload performance results
         uses: actions/upload-artifact@v3
         with:

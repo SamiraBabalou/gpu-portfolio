@@ -4,7 +4,7 @@
 # Repository: gpu-portfolio
 #
 # This environment is used for GPU computing demos,
-# performance analysis, and Jupyter notebooks.
+# performance analysis, reporting, and Jupyter notebooks.
 # ============================================================
 
 name: gpu-portfolio
@@ -15,26 +15,30 @@ channels:
 
 dependencies:
   # Core Python
-  - python=3.10
+  - python=3.11
 
   # Jupyter ecosystem
   - jupyterlab
   - notebook
   - ipykernel
+  - nbconvert
+  - nbclient
 
   # Numerical computing
   - numpy
   - scipy
   - pandas
+
+  # Visualization
   - matplotlib
 
   # GPU support (CUDA-aware libraries)
-  - numba
+  # Safe on CPU-only systems; GPU usage is auto-detected in code
   - cudatoolkit
+  - cupy
+
+  # Reporting (PDF generation)
+  - reportlab
 
   # Utilities
   - pip
-
-  # Pip-only packages (installed via pip)
-  - pip:
-      - cupy-cuda11x

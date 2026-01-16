@@ -5,12 +5,14 @@
 This repository demonstrates a reproducible GPU computing workflow using
 NumPy (CPU) and CuPy (GPU) to benchmark vector addition performance.
 
-The project is designed as a **portfolio-grade GPU systems project**,
+The project is designed as a **portfolio-grade GPU systems project**, 
 showcasing:
+
 - GPU acceleration principles
 - Performance benchmarking methodology
 - Reproducible environments (Conda, Docker)
 - Automated execution (CI-ready)
+- PDF reporting with GPU environment metadata
 
 The code runs correctly on systems **with or without a GPU**, using
 automatic CPU fallback when needed.
@@ -35,6 +37,8 @@ automatic CPU fallback when needed.
 3. Measure execution time with synchronization
 4. Compute speedup and analyze performance behavior
 5. Automate execution via scripts and CI-compatible tooling
+6. Collect GPU environment metadata for reproducibility
+7. Generate PDF report including performance plots and GPU info
 
 ---
 
@@ -44,7 +48,8 @@ automatic CPU fallback when needed.
 - GPU benefits appear when workloads are large enough to amortize:
   - Kernel launch overhead
   - Host–device memory transfer costs
-- This aligns with real-world GPU performance theory
+- GPU metadata shows device name, CUDA version, and CuPy version used
+- PDF report demonstrates performance trends professionally
 
 ---
 
@@ -53,17 +58,19 @@ automatic CPU fallback when needed.
 ```text
 gpu-portfolio/
 ├── notebooks/
-│   └── vector_addition.ipynb      # Main experiment notebook
+│   └── vector_addition.ipynb       # Main experiment notebook
 ├── performance/
-│   ├── benchmark_vector_add.py    # CPU/GPU benchmark script
-│   └── plot_performance.py        # Performance visualization
+│   ├── benchmark_vector_add.py     # CPU/GPU benchmark script
+│   ├── gpu_info.py                 # Collect GPU metadata
+│   └── plot_performance.py         # Performance visualization
 ├── reports/
-│   └── figures/                   # Generated plots
-├── environment.yml                # Conda environment definition
-├── Dockerfile                     # GPU-enabled Docker environment
-├── run_notebooks.sh               # Automated notebook execution
+│   ├── performance_report.pdf      # Generated PDF report
+│   └── figures/                    # Generated plots (PNG)
+├── environment.yml                 # Conda environment definition
+├── Dockerfile                      # GPU-enabled Docker environment
+├── run_notebooks.sh                # Automated notebook execution
 ├── .github/workflows/
-│   └── gpu-ci.yml                 # CI workflow
+│   └── gpu-ci.yml                  # CI workflow
 └── README.md
 ````
 
@@ -79,7 +86,7 @@ gpu-portfolio/
 * NVIDIA driver installed
 * Docker + NVIDIA Container Toolkit
 
-#### Build image
+#### Build Docker image
 
 ```bash
 docker build -t gpu-portfolio .
@@ -92,6 +99,8 @@ docker run --gpus all -it -p 8888:8888 gpu-portfolio
 ```
 
 Copy the Jupyter URL with the token from the terminal and open it in a browser.
+
+Inside the container, notebooks are under `/workspace/notebooks/`.
 
 ---
 
@@ -107,7 +116,7 @@ jupyter notebook
 
 ## Notebook Execution (Automated)
 
-To execute notebooks non-interactively:
+To execute notebooks and generate performance plots non-interactively:
 
 ```bash
 bash run_notebooks.sh
@@ -115,15 +124,42 @@ bash run_notebooks.sh
 
 This ensures:
 
-* Correct kernel usage
+* Correct kernel usage (`gpu-portfolio`)
 * CI/Docker compatibility
 * Reproducible execution
+* GPU metadata collection
+* PDF report generation
 
 ---
 
-## Performance Analysis Notes
+## Performance Results
 
-GPU acceleration is not guaranteed for all workloads.
+The following figure shows CPU vs GPU execution time for vector addition
+across increasing vector sizes.
+
+<p align="center">
+  <img src="reports/figures/vector_add_performance.png" alt="CPU vs GPU Vector Addition Performance" width="700">
+</p>
+
+**Interpretation**
+
+GPU acceleration does not necessarily outperform CPU for moderate or
+memory-bound workloads. Kernel launch overhead and host–device data
+transfer costs can dominate execution time.
+
+As workload size increases, GPU performance advantages emerge once
+computation is sufficient to amortize these overheads. This behavior
+reflects a fundamental principle of GPU performance engineering.
+
+---
+
+## Performance Analysis
+
+Performance is summarized in `reports/performance_report.pdf` and includes:
+
+* CPU vs GPU execution times
+* Performance plots
+* GPU environment metadata (device name, CUDA version, CuPy version)
 
 Key factors affecting performance:
 
@@ -141,4 +177,8 @@ Designing GPU workloads requires careful scaling analysis.
 * The project runs safely on CPU-only systems
 * GPU detection is automatic
 * All components are CI-ready and Docker-compatible
+* Figures are saved as PNGs under `reports/figures/`
+* PDF report provides a professional summary suitable for portfolio submission
+
+
 
