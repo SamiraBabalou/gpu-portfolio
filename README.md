@@ -62,13 +62,19 @@ gpu-portfolio/
 ├── performance/
 │   ├── benchmark_vector_add.py     # CPU/GPU benchmark script
 │   ├── gpu_info.py                 # Collect GPU metadata
-│   └── plot_performance.py         # Performance visualization
+│   ├── plot_performance.py         # Performance visualization
+│   ├── performance_results.txt     # Generated benchmark data
+│   └── gpu_metadata.json           # GPU metadata (JSON)
 ├── reports/
 │   ├── performance_report.pdf      # Generated PDF report
+│   ├── generate_report.py          # Script to generate PDF report
 │   └── figures/                    # Generated plots (PNG)
 ├── environment.yml                 # Conda environment definition
 ├── Dockerfile                      # GPU-enabled Docker environment
-├── run_notebooks.sh                # Automated notebook execution
+├── scripts/
+│   └── run_notebooks.sh            # Automated notebook execution
+├── tests/                          # Unit tests (pytest)
+│   └── test_performance.py         # Verify performance scripts and GPU metadata
 ├── .github/workflows/
 │   └── gpu-ci.yml                  # CI workflow
 └── README.md
@@ -116,7 +122,7 @@ jupyter notebook
 
 ## Notebook Execution (Automated)
 
-To execute notebooks and generate performance plots non-interactively:
+To execute notebooks, generate performance plots, and verify results non-interactively:
 
 ```bash
 bash run_notebooks.sh
@@ -129,6 +135,7 @@ This ensures:
 * Reproducible execution
 * GPU metadata collection
 * PDF report generation
+* Unit tests verify scripts, benchmark results, and GPU metadata
 
 ---
 
@@ -150,6 +157,15 @@ transfer costs can dominate execution time.
 As workload size increases, GPU performance advantages emerge once
 computation is sufficient to amortize these overheads. This behavior
 reflects a fundamental principle of GPU performance engineering.
+
+**PDF Report Contents**
+
+The generated PDF (`reports/performance_report.pdf`) includes:
+
+- CPU vs GPU performance figure
+- GPU metadata (device name, memory, CUDA version)
+- Summary and interpretation of results
+- Verification status from unit tests
 
 ---
 
@@ -179,6 +195,6 @@ Designing GPU workloads requires careful scaling analysis.
 * All components are CI-ready and Docker-compatible
 * Figures are saved as PNGs under `reports/figures/`
 * PDF report provides a professional summary suitable for portfolio submission
-
+* Unit tests verify scripts, benchmark results, and GPU metadata
 
 

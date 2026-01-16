@@ -42,3 +42,8 @@ dependencies:
 
   # Utilities
   - pip
+
+  # Pip-only packages (kept minimal)
+  - pip:
+      - nbclient
+      - pytest   # For running unit tests in CI and PDF report

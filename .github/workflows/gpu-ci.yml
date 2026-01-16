@@ -75,9 +75,16 @@ jobs:
         run: |
           python performance/plot_performance.py
 
-      # Step 9: Upload artifacts
+      # Step 9: Run unit tests
+      - name: Run unit tests
+        # Verifies generated files (performance_results.txt, gpu_metadata.json) and ensures scripts work
+        run: |
+          pytest tests/
+
+      # Step 10: Upload artifacts
       - name: Upload performance results
         uses: actions/upload-artifact@v3
         with:
           name: gpu-performance-results
           path: performance/
+

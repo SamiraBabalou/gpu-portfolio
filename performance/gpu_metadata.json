@@ -1,6 +1,8 @@
 {
   "gpu_available": true,
-  "device_name": "Unknown GPU",
-  "cuda_runtime_version": 11080,
-  "cupy_version": "13.6.0"
+  "device_name": "UnknownVendor-GPU CC8.6",
+  "vendor": "UnknownVendor",
+  "cuda_version": "11.8",
+  "cupy_version": "13.4.1",
+  "gpu_memory_mb": null
 }
