@@ -76,6 +76,7 @@ jobs:
 
       # Step 9: Generate performance plots
       - name: Generate plots
+        shell: bash -l {0}   # ensures conda environment is activated
         run: |
           python performance/plot_performance.py
 
