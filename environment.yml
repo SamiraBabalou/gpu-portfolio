@@ -42,6 +42,7 @@ dependencies:
 
   # Utilities
   - pip
+  - numpy
 
   # Pip-only packages (kept minimal)
   - pip:

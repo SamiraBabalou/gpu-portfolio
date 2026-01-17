@@ -45,13 +45,11 @@ jobs:
           conda info
           conda list
 
-      # Step 4: Install Jupyter kernel dependencies
-      # IMPORTANT:
-      # GitHub runners do NOT include ipykernel by default
-      - name: Install Jupyter kernel dependencies
+      # Step 4: Install Jupyter + runtime dependencies
+      - name: Install notebook runtime dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install ipykernel jupyter
+          pip install numpy ipykernel jupyter nbconvert nbclient
 
       # Step 5: Register conda env as Jupyter kernel
       - name: Register Jupyter kernel
