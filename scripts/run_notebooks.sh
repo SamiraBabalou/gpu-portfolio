@@ -21,7 +21,7 @@ for nb in "${NOTEBOOKS[@]}"; do
         --to notebook \
         --execute "$nb" \
         --ExecutePreprocessor.kernel_name=gpu-portfolio \
-        --output "$nb"
+        --inplace   
 done
 
 echo "All notebooks executed successfully."
