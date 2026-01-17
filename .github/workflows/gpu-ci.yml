@@ -26,8 +26,9 @@ jobs:
 
     steps:
       # Step 1: Checkout repository
+      # NOTE: v4 is required (v3 is deprecated)
       - name: Checkout repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       # Step 2: Install Miniconda and create environment
       - name: Setup Miniconda
@@ -43,8 +44,16 @@ jobs:
         run: |
           conda info
           conda list
- 
-      # Step 4: Register conda env as Jupyter kernel
+
+      # Step 4: Install Jupyter kernel dependencies
+      # IMPORTANT:
+      # GitHub runners do NOT include ipykernel by default
+      - name: Install Jupyter kernel dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install ipykernel jupyter
+
+      # Step 5: Register conda env as Jupyter kernel
       - name: Register Jupyter kernel
         run: |
           python -m ipykernel install \
@@ -52,39 +61,35 @@ jobs:
             --name gpu-portfolio \
             --display-name "Python (gpu-portfolio)"
 
-
-      # Step 5: Execute Jupyter notebooks
+      # Step 6: Execute Jupyter notebooks
       - name: Run notebooks
         run: |
           bash scripts/run_notebooks.sh
 
-
-      # Step 6: Run performance benchmark
+      # Step 7: Run performance benchmark
       - name: Run benchmark script
         run: |
           python performance/benchmark_vector_add.py
 
-      # Step 7: Collect GPU metadata
+      # Step 8: Collect GPU metadata
       - name: Collect GPU metadata
         run: |
           python performance/gpu_info.py
 
-      
-      # Step 8: Generate performance plots
+      # Step 9: Generate performance plots
       - name: Generate plots
         run: |
           python performance/plot_performance.py
 
-      # Step 9: Run unit tests
+      # Step 10: Run unit tests
+      # Verifies generated files and ensures scripts work
       - name: Run unit tests
-        # Verifies generated files (performance_results.txt, gpu_metadata.json) and ensures scripts work
         run: |
           pytest tests/
 
-      # Step 10: Upload artifacts
+      # Step 11: Upload artifacts
       - name: Upload performance results
         uses: actions/upload-artifact@v4
         with:
           name: gpu-performance-results
           path: performance/
-
