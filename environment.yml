@@ -45,5 +45,6 @@ dependencies:
 
   # Pip-only packages (kept minimal)
   - pip:
+      - cupy-cuda12x
       - nbclient
       - pytest   # For running unit tests in CI and PDF report

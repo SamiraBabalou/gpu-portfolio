@@ -1,8 +1,7 @@
 {
   "gpu_available": true,
-  "device_name": "UnknownVendor-GPU CC8.6",
-  "vendor": "UnknownVendor",
-  "cuda_version": "11.8",
-  "cupy_version": "13.4.1",
-  "gpu_memory_mb": null
+  "device_name": "NVIDIA GeForce RTX 3070 Laptop GPU",
+  "gpu_memory_mb": 8191,
+  "cuda_version": "12.9",
+  "cupy_version": "13.6.0"
 }
