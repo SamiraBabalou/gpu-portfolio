@@ -81,10 +81,11 @@ jobs:
           python performance/plot_performance.py
 
       # Step 10: Run unit tests
-      # Verifies generated files and ensures scripts work
       - name: Run unit tests
+        shell: bash -l {0}  # ensures conda environment is activated
         run: |
           pytest tests/
+
 
       # Step 11: Upload artifacts
       - name: Upload performance results
